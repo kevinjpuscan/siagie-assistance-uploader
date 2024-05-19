@@ -4,6 +4,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 const srcDir = path.join(__dirname, "..", "src");
 
 module.exports = {
+  devtool: false,
   entry: {
     popup: path.join(srcDir, "popup.tsx"),
     content: path.join(srcDir, "content.ts"),
@@ -27,6 +28,10 @@ module.exports = {
         test: /\.tsx?$/,
         use: "ts-loader",
         exclude: /node_modules/,
+      },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader", "postcss-loader"],
       },
     ],
   },
