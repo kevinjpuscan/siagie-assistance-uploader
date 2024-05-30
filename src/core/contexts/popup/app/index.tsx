@@ -1,12 +1,24 @@
 import React from "react";
+import { AsssitenceRepositoryLocator } from "@/core/contexts/shared/assistence/repositories/asssistence.api.repository";
 
 export function App() {
+  const getAssistences = async () => {
+    const assistenceRepository = AsssitenceRepositoryLocator.getInstance();
+    const assistences = await assistenceRepository.getAssistences({
+      classroom: 1,
+      year: "2024",
+      month: "05",
+    });
+    return assistences;
+  };
+
   const handleClickProccess = async () => {
+    const assistences = await getAssistences();
     // @ts-ignore
     await chrome.tabs.query({ active: true }, async function (tabs) {
       let tab = tabs[0];
       // @ts-ignore
-      await chrome.tabs.sendMessage(tab.id, { message: "test" });
+      await chrome.tabs.sendMessage(tab.id, { message: assistences });
     });
   };
   return (

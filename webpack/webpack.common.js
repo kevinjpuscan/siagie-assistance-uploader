@@ -2,6 +2,7 @@ const webpack = require("webpack");
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const srcDir = path.join(__dirname, "..", "src");
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 module.exports = {
   devtool: false,
@@ -14,14 +15,14 @@ module.exports = {
     path: path.join(__dirname, "../dist/js"),
     filename: "[name].js",
   },
-  optimization: {
+  /*   optimization: {
     splitChunks: {
       name: "vendor",
       chunks(chunk) {
         return chunk.name !== "background";
       },
     },
-  },
+  }, */
   module: {
     rules: [
       {
@@ -37,6 +38,7 @@ module.exports = {
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
+    plugins: [new TsconfigPathsPlugin({ configFile: "./tsconfig.json" })],
   },
   plugins: [
     new CopyPlugin({
