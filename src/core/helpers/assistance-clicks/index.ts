@@ -19,7 +19,7 @@ export const setAssistenceValueWithClicks: (
 
   let numberOfClicks = indexNew - indexCurrent;
   if (numberOfClicks < 0) {
-    numberOfClicks = indexNew + ASSISTENCE_TYPES.length - indexCurrent;
+    numberOfClicks = indexNew + ASSISTENCE_TYPES.length - indexCurrent - 1;
   }
 
   for (let i = 0; i < numberOfClicks; i++) {
