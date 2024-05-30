@@ -1,3 +1,5 @@
+import { ASSISTENCE_VALUES } from "@/core/constants/assistance";
+
 export interface AssistenceResponse {
   data: AssistenceElement[];
   meta: AssistenceMeta;
@@ -9,7 +11,7 @@ export interface AssistenceElement {
 }
 
 export interface AssistenceAttributes {
-  is_late: boolean;
+  type: ASSISTENCE_VALUES;
   entry_time: string;
   student: StudentResponse;
 }

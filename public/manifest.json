@@ -16,7 +16,7 @@
   "content_scripts": [
     {
       "js": ["js/content.js"],
-      "matches": ["https://github.com/*"]
+      "matches": ["https://sistemas10.minedu.gob.pe/*"]
     }
   ],
   "background": {

@@ -1,11 +1,13 @@
-interface Student {
+import { ASSISTENCE_VALUES } from "@/core/constants/assistance";
+
+export interface Student {
   dni: string;
   first_names: string;
   last_names: string;
 }
-interface Assistence {
+export interface Assistence {
   id: number;
-  is_late: boolean;
+  type: ASSISTENCE_VALUES;
   entry_time: Date;
   student: Student;
 }
