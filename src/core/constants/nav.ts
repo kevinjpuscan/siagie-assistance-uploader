@@ -1,0 +1,4 @@
+export const enum NAV_ITEM {
+  ASSISTANCE = "ASSISTANCE",
+  CLASSROOMS = "CLASSROOMS",
+}

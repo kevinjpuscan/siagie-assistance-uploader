@@ -4,7 +4,7 @@ import { createContext, useContext } from "react";
 interface UserContext {
   user: User | undefined;
   isLoading: boolean;
-  setUser: (user: User) => void;
+  setUser: (user: User | undefined) => void;
 }
 
 export const AuthContext = createContext({

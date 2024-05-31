@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { AuthContext } from "@/core/contexts/popup/context/auth-context";
 import { API, BEARER } from "@/core/config";
 import { useEffect } from "react";
-import { getToken } from "@/core/helpers/auth";
+import { getToken, removeToken } from "@/core/helpers/auth";
 
 const AuthProvider = ({ children }) => {
   const [userData, setUserData] = useState();
@@ -28,7 +28,11 @@ const AuthProvider = ({ children }) => {
   };
 
   const handleUser = (user) => {
-    setUserData(user);
+    if (!user) {
+      removeToken();
+    } else {
+      setUserData(user);
+    }
   };
 
   useEffect(() => {

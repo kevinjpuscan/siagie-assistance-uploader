@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useAuthContext } from "@/core/contexts/popup/context/auth-context";
 import { API } from "@/core/config";
 import { setToken } from "@/core/helpers/auth";
-import { AuthResponse } from "@/core/types";
 
 export function Login() {
   const { setUser } = useAuthContext();
@@ -74,8 +73,9 @@ export function Login() {
           type="password"
         />
         <button
-          className="w-full py-2 px-8 bg-main text-white text-lg rounded-md"
+          className="w-full py-2 px-8 bg-main text-white text-lg rounded-md :disabled:bg-gray-400 :disabled:cursor-not-allowed :disabled:opacity-70"
           type="submit"
+          disabled={isLoading}
         >
           Ingresar
         </button>

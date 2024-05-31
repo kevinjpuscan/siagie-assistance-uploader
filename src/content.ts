@@ -1,8 +1,16 @@
-import { getDomData } from "@/core/contexts/content/dom-handler";
 import { Assistence } from "@/core/contexts/shared/assistence/models/assistence";
-import { updateDomData } from "@/core/contexts/content/dom-handler";
+import {
+  updateDomData,
+  getDomData,
+} from "@/core/contexts/content/assistance-handler";
 import { getCurrentSeccion } from "@/core/contexts/content/seccion-handler";
 import { MESSAGES } from "./core/constants/messages";
+import {
+  getClassroomSelected,
+  getStudents,
+} from "@/core/contexts/content/classroom-handler";
+import { ClassroomInfo } from "./core/contexts/shared/classroom/models/classroom-info";
+
 console.log("content7.ts");
 const syncAssistances = async (assistances: Assistence[]) => {
   const studentAssistences = getDomData("tblAsistencia");
@@ -16,9 +24,20 @@ const updateClassroom = () => {
   return data;
 };
 
+const getClassroom = () => {
+  const classroom = getClassroomSelected();
+  const students = getStudents();
+  return {
+    grade: classroom.grade,
+    section: classroom.section,
+    students,
+  } satisfies ClassroomInfo;
+};
+
 const actions = {
   [MESSAGES.SYNC_ASSYSTANCES]: syncAssistances,
   [MESSAGES.UPDATE_CLASSROOM]: updateClassroom,
+  [MESSAGES.GET_CLASSROOM]: getClassroom,
 };
 // @ts-ignore
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
