@@ -1,7 +1,7 @@
 import fetchApi from "src/core/helpers/fetch";
 import { AssistenceResponse } from "./assistence.response";
 import { Assistence } from "../models/assistence";
-
+import { AsssitenceRepository } from "@/core/contexts/shared/assistence/models/assistence.repository";
 export class AssistenceApiRepository implements AsssitenceRepository {
   getAssistences: (assistenceQuery: AssistenceQuery) => Promise<Assistence[]> =
     async (assistenceQuery) => {
