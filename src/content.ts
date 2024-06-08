@@ -12,11 +12,11 @@ import {
 import { ClassroomInfo } from "./core/contexts/shared/classroom/models/classroom-info";
 
 console.log("content7.ts");
-const syncAssistances = async (assistances: Assistence[]) => {
+const syncAssistances = (assistances: Assistence[]) => {
   const studentAssistences = getDomData("tblAsistencia");
   console.log("data:", studentAssistences);
   console.log("assistances:", assistances);
-  updateDomData(assistances, studentAssistences);
+  return updateDomData(assistances, studentAssistences);
 };
 
 const updateClassroom = () => {
@@ -46,6 +46,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log("message:", message);
     if (!actions[message]) throw new Error("Message not found");
     const response = actions[message](request.data);
+    console.log("response:", response);
     if (response) sendResponse(response);
   } catch (error) {
     console.error(error);

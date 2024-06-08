@@ -5,7 +5,7 @@ export class ClassroomApiRepository {
   syncClassroom: (classroomInfo: ClassroomInfo) => Promise<void> = async (
     classroomInfo
   ) => {
-    await fetchApi.post("classrooms", classroomInfo);
+    await fetchApi.post("sync-classrooms", classroomInfo);
   };
 }
 

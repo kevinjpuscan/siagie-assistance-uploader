@@ -8,22 +8,33 @@ export function SyncClassroom() {
     React.useState<ClassroomInfo | null>(null);
 
   const handleClickSyncClassroom = async () => {
-    // @ts-ignore
-    await chrome.tabs.query({ active: true }, async function (tabs) {
-      let tab = tabs[0];
+    try {
       // @ts-ignore
-      await chrome.tabs.sendMessage(
-        tab.id,
-        {
-          message: MESSAGES.GET_CLASSROOM,
-        },
-        async function (response) {
-          const classRoomInfo = response as ClassroomInfo;
-          console.log("classRoomInfo:", classRoomInfo);
-          //await syncClassroom(classRoomInfo);
-        }
-      );
-    });
+      await chrome.tabs.query({ active: true }, async function (tabs) {
+        let tab = tabs[0];
+        // @ts-ignore
+        await chrome.tabs.sendMessage(
+          tab.id,
+          {
+            message: MESSAGES.GET_CLASSROOM,
+          },
+          async function (response) {
+            try {
+              const classRoomInfo = response as ClassroomInfo;
+              console.log("classRoomInfo:", classRoomInfo);
+              await syncClassroom(classRoomInfo);
+              alert("Aula sincronizada");
+            } catch (error) {
+              console.error(error);
+              alert("No se ha podido sincronizar la sección");
+            }
+          }
+        );
+      });
+    } catch (error) {
+      console.error(error);
+      alert("Ocurrió un error");
+    }
   };
 
   const syncClassroom = async (classRoomInfo) => {

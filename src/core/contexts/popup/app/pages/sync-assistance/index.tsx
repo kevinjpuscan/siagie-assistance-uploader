@@ -1,19 +1,20 @@
 import React from "react";
 import { AsssitenceRepositoryLocator } from "@/core/contexts/shared/assistence/repositories/asssistence.api.repository";
 import { MESSAGES } from "@/core/constants/messages";
+import { Assistence } from "@/core/contexts/shared/assistence/models/assistence";
 
 type CurrentSectionPage = {
   grade: string;
   section: string;
   month: string;
 };
+const assistenceRepository = AsssitenceRepositoryLocator.getInstance();
 
 export function SyncAssistance() {
   const [sectionPageInfo, setSectionPageInfo] =
     React.useState<CurrentSectionPage | null>(null);
 
   const getAssistences = async () => {
-    const assistenceRepository = AsssitenceRepositoryLocator.getInstance();
     const assistences = await assistenceRepository.getAssistences({
       classroom: 1,
       year: "2024",
@@ -28,10 +29,17 @@ export function SyncAssistance() {
     await chrome.tabs.query({ active: true }, async function (tabs) {
       let tab = tabs[0];
       // @ts-ignore
-      await chrome.tabs.sendMessage(tab.id, {
-        message: MESSAGES.SYNC_ASSYSTANCES,
-        data: assistences,
-      });
+      await chrome.tabs.sendMessage(
+        tab.id,
+        {
+          message: MESSAGES.SYNC_ASSYSTANCES,
+          data: assistences,
+        },
+        async function (response) {
+          const assistanceToUpdate = response as Assistence[];
+          await assistenceRepository.updateAssistences(assistanceToUpdate);
+        }
+      );
     });
   };
 

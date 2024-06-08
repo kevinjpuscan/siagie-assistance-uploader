@@ -1,4 +1,7 @@
-import { ASSISTENCE_VALUES } from "@/core/constants/assistance";
+import {
+  ASSISTENCE_TYPES,
+  ASSISTENCE_VALUES,
+} from "@/core/constants/assistance";
 import { setAssistenceValueWithClicks } from "@/core/helpers/assistance-clicks";
 import { Assistence } from "../shared/assistence/models/assistence";
 interface AssistenceDay {
@@ -70,7 +73,9 @@ export const getDomData: (idTable: string) => StudentWithAssistanceDays[] = (
 export const updateDomData: (
   assistences: Assistence[],
   domAssistences: StudentWithAssistanceDays[]
-) => void = (assistences, domAssistences) => {
+) => Assistence[] = (assistences, domAssistences) => {
+  console.log(domAssistences);
+  const assistanceToUpdate: Assistence[] = [];
   for (const assistence of assistences) {
     const assistenceStudentName =
       `${assistence.student.last_names}, ${assistence.student.first_names}`.toUpperCase();
@@ -89,10 +94,20 @@ export const updateDomData: (
       console.error(`Assistence day not found ${assistence.entry_time}`);
       continue;
     }
+
+    if (
+      assistenceDay.current_value !== ASSISTENCE_VALUES.EMPTY &&
+      assistenceDay.current_value !== assistence.type
+    ) {
+      assistence.type = assistenceDay.current_value;
+      assistanceToUpdate.push(assistence);
+      continue;
+    }
     setAssistenceValueWithClicks(
       assistenceDay.current_value,
       assistence.type,
       assistenceDay.element
     );
   }
+  return assistanceToUpdate;
 };
