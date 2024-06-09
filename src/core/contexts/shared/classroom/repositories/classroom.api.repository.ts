@@ -1,5 +1,6 @@
 import fetchApi from "src/core/helpers/fetch";
 import { ClassroomInfo } from "../models/classroom-info";
+import { Classroom } from "@/core/types";
 
 export class ClassroomApiRepository {
   syncClassroom: (classroomInfo: ClassroomInfo) => Promise<void> = async (

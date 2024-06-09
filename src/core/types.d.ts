@@ -23,3 +23,11 @@ export type Student = {
   code: string;
   status: string;
 };
+
+export type Classroom = {
+  id?: number;
+  grade: string;
+  section: string;
+  level: string;
+  institutionId?: string;
+};

@@ -1,7 +1,4 @@
-import {
-  ASSISTENCE_TYPES,
-  ASSISTENCE_VALUES,
-} from "@/core/constants/assistance";
+import { ASSISTENCE_VALUES } from "@/core/constants/assistance";
 import { setAssistenceValueWithClicks } from "@/core/helpers/assistance-clicks";
 import { Assistence } from "../shared/assistence/models/assistence";
 interface AssistenceDay {

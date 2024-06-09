@@ -2,8 +2,11 @@ import React from "react";
 import { AsssitenceRepositoryLocator } from "@/core/contexts/shared/assistence/repositories/asssistence.api.repository";
 import { MESSAGES } from "@/core/constants/messages";
 import { Assistence } from "@/core/contexts/shared/assistence/models/assistence";
+import { getAuthUser } from "@/core/helpers/auth";
+import { chromeSendMessage } from "../../../helpers/chrome";
 
 type CurrentSectionPage = {
+  level: string;
   grade: string;
   section: string;
   month: string;
@@ -14,51 +17,50 @@ export function SyncAssistance() {
   const [sectionPageInfo, setSectionPageInfo] =
     React.useState<CurrentSectionPage | null>(null);
 
-  const getAssistences = async () => {
+  const getAssistences = async (sectionPageInfo: CurrentSectionPage) => {
+    if (!sectionPageInfo) throw new Error("No se ha podido obtener la sección");
+    const user = await getAuthUser();
+    console.log("user:", user);
+    if (!user?.institution)
+      throw new Error("No se ha podido obtener la institución");
+    const { level, grade, section } = sectionPageInfo;
+    console.log("sectionPageInfo:", sectionPageInfo);
+    const classroom = await assistenceRepository.getClassroom({
+      level,
+      grade,
+      section,
+      year: new Date().getFullYear().toString(),
+      institutionId: user.institution.id,
+    });
+    if (!classroom) return;
     const assistences = await assistenceRepository.getAssistences({
-      classroom: 1,
-      year: "2024",
+      classroom: classroom.id as number,
+      year: new Date().getFullYear().toString(),
       month: "05",
     });
     return assistences;
   };
-
-  const handleClickProccess = async () => {
-    const assistences = await getAssistences();
-    // @ts-ignore
-    await chrome.tabs.query({ active: true }, async function (tabs) {
-      let tab = tabs[0];
-      // @ts-ignore
-      await chrome.tabs.sendMessage(
-        tab.id,
-        {
-          message: MESSAGES.SYNC_ASSYSTANCES,
-          data: assistences,
-        },
-        async function (response) {
-          const assistanceToUpdate = response as Assistence[];
-          await assistenceRepository.updateAssistences(assistanceToUpdate);
-        }
-      );
+  const syncClassroom = async () => {
+    const currentSectionPage: CurrentSectionPage = await chromeSendMessage({
+      message: MESSAGES.UPDATE_CLASSROOM,
     });
+    setSectionPageInfo(currentSectionPage);
+    const assistences = await getAssistences(currentSectionPage);
+    if (!assistences)
+      throw new Error("No se ha podido obtener las asistencias");
+    const assistanceToUpdate = await chromeSendMessage({
+      message: MESSAGES.SYNC_ASSYSTANCES,
+      data: assistences,
+    });
+
+    await assistenceRepository.updateAssistences(assistanceToUpdate);
   };
-
   const handleClickUpdateClassroom = async () => {
-    // @ts-ignore
-    await chrome.tabs.query({ active: true }, async function (tabs) {
-      let tab = tabs[0];
-      // @ts-ignore
-      await chrome.tabs.sendMessage(
-        tab.id,
-        {
-          message: MESSAGES.UPDATE_CLASSROOM,
-        },
-        function (response) {
-          const currentSectionPage = response as CurrentSectionPage;
-          setSectionPageInfo(currentSectionPage);
-        }
-      );
-    });
+    try {
+      await syncClassroom();
+    } catch (error) {
+      alert(error);
+    }
   };
   return (
     <div className="w-full h-full p-4 bg-secondary text-white flex flex-col justify-center items-center">
@@ -66,6 +68,7 @@ export function SyncAssistance() {
         <h1 className="text-2xl font-bold">Carga de asistencia SIAGIE</h1>
         {!!sectionPageInfo && (
           <div className="w-full flex flex-col justify-center items-center">
+            <div>Nivel: {sectionPageInfo.level}</div>
             <div>Grado: {sectionPageInfo.grade}</div>
             <div>Sección: {sectionPageInfo.section}</div>
             <div>Mes: {sectionPageInfo.month}</div>
@@ -78,19 +81,8 @@ export function SyncAssistance() {
           type="button"
           onClick={handleClickUpdateClassroom}
         >
-          Actualizar sección
+          Actualizar Asistencia
         </button>
-      </div>
-      <div className="py-6">
-        {!!sectionPageInfo && (
-          <button
-            className="w-full py-2 px-8 bg-main text-white text-lg rounded-md"
-            type="button"
-            onClick={handleClickProccess}
-          >
-            Procesar
-          </button>
-        )}
       </div>
     </div>
   );

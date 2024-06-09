@@ -1,6 +1,13 @@
 import { Student } from "@/core/types";
 
 export const getClassroomSelected = () => {
+  const levelElement = document.querySelector(
+    "#ctl00_lblNivelEducativo"
+  ) as HTMLSpanElement;
+  if (!levelElement) {
+    throw new Error("Level element not found");
+  }
+  const level = levelElement.innerText;
   const gradeSelect = document.querySelector(
     "#ctl00_ContentPlaceMain_ddlGradoIE"
   ) as HTMLSelectElement;
@@ -28,7 +35,7 @@ export const getClassroomSelected = () => {
     throw new Error("Section selected not found");
   }
   const section = sectionSelected.innerText;
-  return { grade, section };
+  return { level, grade, section };
 };
 
 export const getStudents = () => {

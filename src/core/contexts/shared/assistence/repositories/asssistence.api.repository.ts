@@ -2,7 +2,9 @@ import fetchApi from "src/core/helpers/fetch";
 import { AssistenceResponse } from "./assistence.response";
 import { Assistence } from "../models/assistence";
 import { AsssitenceRepository } from "@/core/contexts/shared/assistence/models/assistence.repository";
-export class AssistenceApiRepository implements AsssitenceRepository {
+import { ClassroomFilters } from "../models/classroom";
+import { Classroom } from "@/core/types";
+export class AssistenceApiRepository {
   getAssistences: (assistenceQuery: AssistenceQuery) => Promise<Assistence[]> =
     async (assistenceQuery) => {
       const getByPage: (page: number) => Promise<Assistence[]> = async (
@@ -64,6 +66,22 @@ export class AssistenceApiRepository implements AsssitenceRepository {
       });
     }
   };
+  getClassroom: (filters: ClassroomFilters) => Promise<Partial<Classroom>> =
+    async (filters) => {
+      const query = {
+        fields: ["id", "level", "grade", "section"],
+        filters: {
+          grade: filters.grade,
+          section: filters.section,
+          level: filters.level,
+          institution: filters.institutionId,
+          year: filters.year,
+        },
+      };
+      const classroomResponse = await fetchApi.get("classrooms", query);
+      const classroom = classroomResponse.data[0] as Partial<Classroom>;
+      return classroom;
+    };
 }
 
 export class AsssitenceRepositoryLocator {
