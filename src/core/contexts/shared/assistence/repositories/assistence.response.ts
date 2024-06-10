@@ -13,6 +13,7 @@ export interface AssistenceElement {
 export interface AssistenceAttributes {
   type: ASSISTENCE_VALUES;
   entry_time: string;
+  day: string;
   student: StudentResponse;
 }
 

@@ -84,8 +84,7 @@ export const updateDomData: (
       continue;
     }
     const assistenceDay = student.assistence_days.find(({ day }) => {
-      const assistanceDate = new Date(assistence.entry_time);
-      return day === assistanceDate.getDate();
+      return day === Number(assistence.day);
     });
     if (!assistenceDay) {
       console.error(`Assistence day not found ${assistence.entry_time}`);

@@ -30,6 +30,7 @@ const getClassroom = () => {
   return {
     grade: classroom.grade,
     section: classroom.section,
+    level: classroom.level,
     students,
   } satisfies ClassroomInfo;
 };

@@ -1,9 +1,9 @@
 import React from "react";
 import { AsssitenceRepositoryLocator } from "@/core/contexts/shared/assistence/repositories/asssistence.api.repository";
 import { MESSAGES } from "@/core/constants/messages";
-import { Assistence } from "@/core/contexts/shared/assistence/models/assistence";
 import { getAuthUser } from "@/core/helpers/auth";
 import { chromeSendMessage } from "../../../helpers/chrome";
+import { MONTHS } from "@/core/constants/months";
 
 type CurrentSectionPage = {
   level: string;
@@ -36,8 +36,9 @@ export function SyncAssistance() {
     const assistences = await assistenceRepository.getAssistences({
       classroom: classroom.id as number,
       year: new Date().getFullYear().toString(),
-      month: "05",
+      month: MONTHS[sectionPageInfo.month],
     });
+    console.log("assistences:", assistences);
     return assistences;
   };
   const syncClassroom = async () => {

@@ -4,5 +4,6 @@ export type ClassroomInfo = {
   grade: string;
   section: string;
   institutionId?: string;
+  level: string;
   students: Student[];
 };

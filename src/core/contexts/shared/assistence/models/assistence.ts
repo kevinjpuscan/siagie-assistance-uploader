@@ -10,4 +10,5 @@ export interface Assistence {
   type: ASSISTENCE_VALUES;
   entry_time: Date;
   student: StudentForAssistence;
+  day: string;
 }

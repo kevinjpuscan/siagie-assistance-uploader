@@ -11,17 +11,17 @@ export class AssistenceApiRepository {
         page
       ) => {
         const query = {
+          filters: {
+            classroom: assistenceQuery.classroom,
+            year: assistenceQuery.year,
+            month: assistenceQuery.month,
+          },
           populate: {
-            filters: {
-              classroom: assistenceQuery.classroom,
-              year: assistenceQuery.year,
-              month: assistenceQuery.month,
-            },
             student: {
               fields: ["dni", "first_names", "last_names"],
             },
           },
-          fields: ["type", "entry_time"],
+          fields: ["type", "day"],
           pagination: {
             page: page,
             pageSize: 100,
@@ -31,10 +31,12 @@ export class AssistenceApiRepository {
           "assistances",
           query
         );
+
         const assistances = assistenceResponse.data.map((assistence) => ({
           id: assistence.id,
           type: assistence.attributes.type,
           entry_time: new Date(assistence.attributes.entry_time),
+          day: assistence.attributes.day,
           student: {
             dni: assistence.attributes.student.data.attributes.dni,
             first_names:
