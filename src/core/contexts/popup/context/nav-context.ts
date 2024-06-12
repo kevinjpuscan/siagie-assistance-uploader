@@ -8,7 +8,7 @@ interface NavContext {
 }
 
 export const NavContext = createContext({
-  page: NAV_ITEM.ASSISTANCE,
+  page: NAV_ITEM.SYNC,
   isLoading: false,
   setPage: (page: NAV_ITEM) => {},
 } as NavContext);

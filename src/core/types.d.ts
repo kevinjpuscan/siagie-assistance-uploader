@@ -7,6 +7,12 @@ export interface User {
   blocked: boolean;
   createdAt: string;
   updatedAt: string;
+  institution: Institution;
+}
+
+export interface Institution {
+  id: number;
+  name: string;
 }
 
 export interface AuthResponse {
@@ -30,4 +36,9 @@ export type Classroom = {
   section: string;
   level: string;
   institutionId?: string;
+};
+
+export type Shift = {
+  id: number;
+  name: string;
 };

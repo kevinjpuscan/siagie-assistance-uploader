@@ -3,7 +3,7 @@ import { NavContext } from "@/core/contexts/popup/context/nav-context";
 import { NAV_ITEM } from "@/core/constants/nav";
 
 const NavProvider = ({ children }) => {
-  const [page, setPage] = useState(NAV_ITEM.ASSISTANCE);
+  const [page, setPage] = useState(NAV_ITEM.SYNC);
   const [isLoading, setIsLoading] = useState(false);
 
   const handlePage = (page) => {

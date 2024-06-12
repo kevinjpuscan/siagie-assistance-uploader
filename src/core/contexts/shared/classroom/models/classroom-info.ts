@@ -6,4 +6,5 @@ export type ClassroomInfo = {
   institutionId?: string;
   level: string;
   students: Student[];
+  shiftId?: number;
 };
