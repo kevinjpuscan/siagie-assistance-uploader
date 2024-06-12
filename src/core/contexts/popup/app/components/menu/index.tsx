@@ -6,6 +6,7 @@ export function Menu() {
 
   const handleClickExit = () => {
     setUser(undefined);
+    window.close();
   };
 
   return (
