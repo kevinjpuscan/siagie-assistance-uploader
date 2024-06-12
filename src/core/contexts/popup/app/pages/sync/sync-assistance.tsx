@@ -1,9 +1,10 @@
 import React from "react";
 import { AsssitenceRepositoryLocator } from "@/core/contexts/shared/assistence/repositories/asssistence.api.repository";
 import { MESSAGES } from "@/core/constants/messages";
-import { getAuthUser } from "@/core/helpers/auth";
+import { Spinner } from "../../components/spiner";
 import { chromeSendMessage } from "../../../helpers/chrome";
 import { MONTHS } from "@/core/constants/months";
+import { User } from "@/core/types";
 
 type CurrentSectionPage = {
   level: string;
@@ -13,14 +14,11 @@ type CurrentSectionPage = {
 };
 
 const assistenceRepository = AsssitenceRepositoryLocator.getInstance();
-export function SyncAssistance({ user: User }) {
-  const [sectionPageInfo, setSectionPageInfo] =
-    React.useState<CurrentSectionPage | null>(null);
+export function SyncAssistance({ user }: { user: User }) {
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const getAssistences = async (sectionPageInfo: CurrentSectionPage) => {
     if (!sectionPageInfo) throw new Error("No se ha podido obtener la sección");
-    const user = await getAuthUser();
-    console.log("user:", user);
     if (!user?.institution)
       throw new Error("No se ha podido obtener la institución");
     const { level, grade, section } = sectionPageInfo;
@@ -30,7 +28,7 @@ export function SyncAssistance({ user: User }) {
       grade,
       section,
       year: new Date().getFullYear().toString(),
-      institutionId: user.institution.id,
+      institutionId: String(user.institution.id),
     });
     if (!classroom) return;
     const assistences = await assistenceRepository.getAssistences({
@@ -45,7 +43,6 @@ export function SyncAssistance({ user: User }) {
     const currentSectionPage: CurrentSectionPage = await chromeSendMessage({
       message: MESSAGES.UPDATE_CLASSROOM,
     });
-    setSectionPageInfo(currentSectionPage);
     const assistences = await getAssistences(currentSectionPage);
     if (!assistences)
       throw new Error("No se ha podido obtener las asistencias");
@@ -58,17 +55,22 @@ export function SyncAssistance({ user: User }) {
   };
   const handleClickUpdateClassroom = async () => {
     try {
+      setIsLoading(true);
       await syncClassroom();
     } catch (error) {
       alert(error);
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
     <button
-      className="w-full py-2 px-8 bg-main text-white text-lg rounded-md"
+      className="w-full py-2 px-8 bg-main text-white text-lg rounded-md flex items-center justify-center disabled:bg-main_dark disabled:cursor-not-allowed disabled:opacity-50"
       type="button"
+      disabled={isLoading}
       onClick={handleClickUpdateClassroom}
     >
+      {isLoading && <Spinner />}
       Actualizar Asistencia
     </button>
   );
